@@ -168,7 +168,11 @@ namespace EasySync
                 foreach (FileInfo file in source.GetFiles())
                 {
                     string destFile = Path.Combine(target.FullName, file.Name);
-                    await Task.Run(() => file.CopyTo(destFile, true));
+                    try
+                    {
+                        await Task.Run(() => file.CopyTo(destFile, true));
+                    } catch (Exception ex) { }
+                    
                 }
 
                 foreach (DirectoryInfo subDir in source.GetDirectories())
@@ -177,10 +181,7 @@ namespace EasySync
                     await SynchronizeAsync(subDir.FullName, targetSubDir);
                 }
             }
-            catch (Exception ex)
-            {
-
-            }
+            catch (Exception ex) { }
         }
 
         public void Dispose()
